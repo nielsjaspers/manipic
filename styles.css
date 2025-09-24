@@ -95,7 +95,7 @@ canvas {
     margin: 20px auto;
 }
 
-/* Segmented control styling */
+/* Segmented control styling (legacy - not used for vertical lists) */
 .segmented {
     position: relative;
     display: inline-flex;
@@ -144,6 +144,54 @@ canvas {
 .segmented button:focus-visible {
     outline: none;
 }
+
+/* Simple horizontal button list for options (was vertical) */
+.button-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 12px 0;
+    flex-wrap: wrap;
+}
+
+.button-list button {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #2a2a2a;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.button-list button:hover {
+    background-color: #444444;
+}
+
+.button-list button.active {
+    background-color: #2f6bff;
+    color: #fff;
+    border-color: rgba(47,107,255,0.6);
+}
+
+/* Footer on main page */
+.footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 12px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #cccccc;
+}
+
+.footer a {
+    color: #9fc1ff;
+    text-decoration: underline;
+}
+
 
 .back-btn {
     position: absolute;

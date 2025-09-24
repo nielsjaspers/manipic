@@ -25,11 +25,11 @@
         <canvas id="canvas" style="display:none;"></canvas>
         <div class="customization" id="customization">
             <label>Background:</label>
-            <div class="segmented" id="bgSegmented" role="tablist">
-                <button data-value="white" class="active" role="tab" aria-selected="true">White</button>
-                <button data-value="black" role="tab">Black</button>
-                <button data-value="transparent" role="tab">Transparent</button>
-                <button data-value="custom" role="tab">Custom</button>
+            <div class="button-list" id="bgList">
+                <button data-value="white" class="active">White</button>
+                <button data-value="black">Black</button>
+                <button data-value="transparent">Transparent</button>
+                <button data-value="custom">Custom</button>
             </div>
             <div class="custom-field" id="customField">
                 <input type="color" id="customBg">
@@ -96,10 +96,11 @@
             ctx.restore();
         }
 
-        initSegmented(document.getElementById('bgSegmented'));
-        document.getElementById('bgSegmented').addEventListener('click', (e) => {
+        // simple vertical list behavior for background
+        document.getElementById('bgList').addEventListener('click', (e) => {
             if (e.target.tagName === 'BUTTON') {
-                document.querySelectorAll('#bgSegmented button').forEach(btn => btn.setAttribute('aria-selected', btn === e.target ? 'true' : 'false'));
+                document.querySelectorAll('#bgList button').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
                 currentBg = e.target.dataset.value;
                 if (img) drawCircle();
                 document.getElementById('customField').classList.toggle('show', currentBg === 'custom');

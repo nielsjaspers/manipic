@@ -25,24 +25,24 @@
         <canvas id="canvas" style="display:none;"></canvas>
         <div class="customization" id="customization">
             <label>Radius:</label>
-            <div class="segmented" id="radiusSegmented" role="tablist">
-                <button data-value="2" role="tab">2px</button>
-                <button data-value="4" role="tab">4px</button>
-                <button data-value="8" class="active" aria-selected="true" role="tab">8px</button>
-                <button data-value="16" role="tab">16px</button>
-                <button data-value="32" role="tab">32px</button>
-                <button data-value="64" role="tab">64px</button>
-                <button data-value="custom" role="tab">Custom</button>
+            <div class="button-list" id="radiusList">
+                <button data-value="2">2px</button>
+                <button data-value="4">4px</button>
+                <button data-value="8" class="active">8px</button>
+                <button data-value="16">16px</button>
+                <button data-value="32">32px</button>
+                <button data-value="64">64px</button>
+                <button data-value="custom">Custom</button>
             </div>
             <div class="custom-field" id="radiusField">
-                <input type="number" id="customRadius" placeholder="Radius">
+                <input type="number" id="customRadius" placeholder="Radius" value="8" min="0">
             </div>
             <label>Background:</label>
-            <div class="segmented" id="bgSegmented" role="tablist">
-                <button data-value="white" class="active" aria-selected="true" role="tab">White</button>
-                <button data-value="black" role="tab">Black</button>
-                <button data-value="transparent" role="tab">Transparent</button>
-                <button data-value="custom" role="tab">Custom</button>
+            <div class="button-list" id="bgList">
+                <button data-value="white" class="active">White</button>
+                <button data-value="black">Black</button>
+                <button data-value="transparent">Transparent</button>
+                <button data-value="custom">Custom</button>
             </div>
             <div class="custom-field" id="bgField">
                 <input type="color" id="customBg">
@@ -90,11 +90,17 @@
             document.getElementById('downloadBtn').style.display = 'block';
             canvas.width = img.width;
             canvas.height = img.height;
-            const radius = currentRadius === 'custom' ? parseInt(document.getElementById('customRadius').value) : parseInt(currentRadius);
+            let radius;
+            if (currentRadius === 'custom') {
+                radius = parseInt(document.getElementById('customRadius').value, 10);
+            } else {
+                radius = parseInt(currentRadius, 10);
+            }
+            if (!Number.isFinite(radius) || radius < 0) radius = 8;
             if (currentBg === 'transparent') {
                 ctx.clearRect(0, 0, img.width, img.height);
             } else if (currentBg === 'custom') {
-                ctx.fillStyle = document.getElementById('customBg').value;
+                ctx.fillStyle = document.getElementById('customBg').value || '#ffffff';
                 ctx.fillRect(0, 0, img.width, img.height);
             } else {
                 ctx.fillStyle = currentBg;
@@ -108,20 +114,22 @@
             ctx.restore();
         }
 
-        initSegmented(document.getElementById('radiusSegmented'));
-        document.getElementById('radiusSegmented').addEventListener('click', (e) => {
+        // radius vertical list behavior
+        document.getElementById('radiusList').addEventListener('click', (e) => {
             if (e.target.tagName === 'BUTTON') {
-                document.querySelectorAll('#radiusSegmented button').forEach(btn => btn.setAttribute('aria-selected', btn === e.target ? 'true' : 'false'));
+                document.querySelectorAll('#radiusList button').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
                 currentRadius = e.target.dataset.value;
-                if (img) drawRounded();
                 document.getElementById('radiusField').classList.toggle('show', currentRadius === 'custom');
+                if (img) drawRounded();
             }
         });
 
-        initSegmented(document.getElementById('bgSegmented'));
-        document.getElementById('bgSegmented').addEventListener('click', (e) => {
+        // background vertical list behavior
+        document.getElementById('bgList').addEventListener('click', (e) => {
             if (e.target.tagName === 'BUTTON') {
-                document.querySelectorAll('#bgSegmented button').forEach(btn => btn.setAttribute('aria-selected', btn === e.target ? 'true' : 'false'));
+                document.querySelectorAll('#bgList button').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
                 currentBg = e.target.dataset.value;
                 if (img) drawRounded();
                 document.getElementById('bgField').classList.toggle('show', currentBg === 'custom');

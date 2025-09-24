@@ -68,13 +68,18 @@
             document.getElementById('canvas').style.display = 'block';
             document.getElementById('customization').classList.add('show');
             document.getElementById('downloadBtn').style.display = 'block';
-            let width = parseInt(document.getElementById('width').value);
-            let height = parseInt(document.getElementById('height').value);
+            let width = parseInt(document.getElementById('width').value, 10);
+            let height = parseInt(document.getElementById('height').value, 10);
             const keepAspect = document.getElementById('keepAspect').checked;
+            if (!Number.isFinite(width) || width <= 0) width = img.width;
+            if (!Number.isFinite(height) || height <= 0) height = img.height;
             if (keepAspect) {
-                const ratio = Math.min(width / img.width, height / img.height);
-                width = img.width * ratio;
-                height = img.height * ratio;
+                const ratio = Math.min(width / img.width, height / img.height) || 1;
+                width = Math.max(1, Math.round(img.width * ratio));
+                height = Math.max(1, Math.round(img.height * ratio));
+            } else {
+                width = Math.max(1, Math.round(width));
+                height = Math.max(1, Math.round(height));
             }
             canvas.width = width;
             canvas.height = height;

@@ -67,14 +67,16 @@
             document.getElementById('canvas').style.display = 'block';
             document.getElementById('customization').classList.add('show');
             document.getElementById('downloadBtn').style.display = 'block';
-            const width = parseInt(document.getElementById('width').value);
-            const height = parseInt(document.getElementById('height').value);
-            canvas.width = width;
-            canvas.height = height;
+            let width = parseInt(document.getElementById('width').value, 10);
+            let height = parseInt(document.getElementById('height').value, 10);
+            if (!Number.isFinite(width) || width <= 0) width = 512;
+            if (!Number.isFinite(height) || height <= 0) height = 512;
+            canvas.width = Math.max(1, Math.round(width));
+            canvas.height = Math.max(1, Math.round(height));
             const img = new Image();
             const svgDataUrl = 'data:image/svg+xml;base64,' + btoa(svgString);
             img.onload = () => {
-                ctx.drawImage(img, 0, 0, width, height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             };
             img.src = svgDataUrl;
         }
