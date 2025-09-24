@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downscale - Manipic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="tool-container">
+        <a href="../index.html" class="back-btn">← Back</a>
+        <h1 class="lora-unique">Scaling</h1>
+        <div class="upload-area" id="uploadArea">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7,10 12,15 17,10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <p>Click to upload or paste image from clipboard</p>
+        </div>
+        <canvas id="canvas" style="display:none;"></canvas>
+        <div class="customization" id="customization">
+            <label>Width:</label>
+            <input type="number" id="width" value="32">
+            <label>Height:</label>
+            <input type="number" id="height" value="32">
+            <label><input type="checkbox" id="keepAspect"> Keep Aspect Ratio</label>
+        </div>
+        <button id="downloadBtn" style="display:none;">Download</button>
+    </div>
+    <script src="../script.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let img = null;
+        let originalFilename = 'image.png';
+
+        document.getElementById('uploadArea').addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => loadImage(e.target.files[0]);
+            input.click();
+        });
+
+        handleClipboardPaste((pastedImg) => {
+            img = pastedImg;
+            originalFilename = 'clipboard.png';
+            drawScaled();
+        });
+
+        function loadImage(file) {
+            originalFilename = file.name;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                img = new Image();
+                img.onload = () => drawScaled();
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function drawScaled() {
+            if (!img) return;
+            document.getElementById('uploadArea').style.display = 'none';
+            document.getElementById('canvas').style.display = 'block';
+            document.getElementById('customization').classList.add('show');
+            document.getElementById('downloadBtn').style.display = 'block';
+            let width = parseInt(document.getElementById('width').value);
+            let height = parseInt(document.getElementById('height').value);
+            const keepAspect = document.getElementById('keepAspect').checked;
+            if (keepAspect) {
+                const ratio = Math.min(width / img.width, height / img.height);
+                width = img.width * ratio;
+                height = img.height * ratio;
+            }
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+        }
+
+        document.getElementById('width').addEventListener('input', drawScaled);
+        document.getElementById('height').addEventListener('input', drawScaled);
+        document.getElementById('keepAspect').addEventListener('change', drawScaled);
+
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            downloadCanvas(canvas, originalFilename, 'scaling');
+        });
+    </script>
+</body>
+</html>

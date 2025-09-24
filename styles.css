@@ -1,0 +1,147 @@
+body {
+    font-family: "Lora", serif;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.container {
+    max-width: 600px;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+nav a:hover {
+    background-color: #333333;
+}
+
+/* Tool pages */
+.tool-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.upload-area {
+    border: 2px dashed #ffffff;
+    padding: 50px;
+    margin: 20px 0;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    background-color: #333333;
+}
+
+button {
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #555555;
+}
+
+input, select {
+    margin: 10px;
+    padding: 5px;
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
+
+canvas {
+    max-width: 100%;
+    max-height: 400px;
+    margin: 20px 0;
+}
+
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.customization {
+    display: none;
+}
+
+.customization.show {
+    display: block;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.button-group button {
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.button-group button:hover {
+    background-color: #555555;
+}
+
+.button-group button.active {
+    background-color: #555555;
+}
+
+.custom-field {
+    display: none;
+    margin: 10px 0;
+}
+
+.custom-field.show {
+    display: block;
+}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rounded Corners - Manipic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="tool-container">
+        <a href="../index.html" class="back-btn">← Back</a>
+        <h1 class="lora-unique">Rounded Corners</h1>
+        <div class="upload-area" id="uploadArea">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7,10 12,15 17,10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <p>Click to upload or paste image from clipboard</p>
+        </div>
+        <canvas id="canvas" style="display:none;"></canvas>
+        <div class="customization" id="customization">
+            <label>Radius:</label>
+            <div class="button-group" id="radiusButtons">
+                <button data-value="2">2px</button>
+                <button data-value="4">4px</button>
+                <button data-value="8">8px</button>
+                <button data-value="16">16px</button>
+                <button data-value="32">32px</button>
+                <button data-value="64">64px</button>
+                <button data-value="custom">Custom</button>
+            </div>
+            <div class="custom-field" id="radiusField">
+                <input type="number" id="customRadius" placeholder="Radius">
+            </div>
+            <label>Background:</label>
+            <div class="button-group" id="bgButtons">
+                <button data-value="white">White</button>
+                <button data-value="black">Black</button>
+                <button data-value="transparent">Transparent</button>
+                <button data-value="custom">Custom</button>
+            </div>
+            <div class="custom-field" id="bgField">
+                <input type="color" id="customBg">
+            </div>
+        </div>
+        <button id="downloadBtn" style="display:none;">Download</button>
+    </div>
+    <script src="../script.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let img = null;
+        let originalFilename = 'image.png';
+        let currentRadius = '8';
+        let currentBg = 'white';
+
+        document.getElementById('uploadArea').addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => loadImage(e.target.files[0]);
+            input.click();
+        });
+
+        handleClipboardPaste((pastedImg) => {
+            img = pastedImg;
+            originalFilename = 'clipboard.png';
+            drawRounded();
+        });
+
+        function loadImage(file) {
+            originalFilename = file.name;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                img = new Image();
+                img.onload = () => drawRounded();
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function drawRounded() {
+            if (!img) return;
+            document.getElementById('uploadArea').style.display = 'none';
+            document.getElementById('canvas').style.display = 'block';
+            document.getElementById('customization').classList.add('show');
+            document.getElementById('downloadBtn').style.display = 'block';
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const radius = currentRadius === 'custom' ? parseInt(document.getElementById('customRadius').value) : parseInt(currentRadius);
+            if (currentBg === 'transparent') {
+                ctx.clearRect(0, 0, img.width, img.height);
+            } else if (currentBg === 'custom') {
+                ctx.fillStyle = document.getElementById('customBg').value;
+                ctx.fillRect(0, 0, img.width, img.height);
+            } else {
+                ctx.fillStyle = currentBg;
+                ctx.fillRect(0, 0, img.width, img.height);
+            }
+            ctx.save();
+            ctx.beginPath();
+            ctx.roundRect(0, 0, img.width, img.height, radius);
+            ctx.clip();
+            ctx.drawImage(img, 0, 0);
+            ctx.restore();
+        }
+
+        document.getElementById('radiusButtons').addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                document.querySelectorAll('#radiusButtons button').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                currentRadius = e.target.dataset.value;
+                if (img) drawRounded();
+                document.getElementById('radiusField').classList.toggle('show', currentRadius === 'custom');
+            }
+        });
+
+        document.getElementById('bgButtons').addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                document.querySelectorAll('#bgButtons button').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                currentBg = e.target.dataset.value;
+                if (img) drawRounded();
+                document.getElementById('bgField').classList.toggle('show', currentBg === 'custom');
+            }
+        });
+
+        document.getElementById('customRadius').addEventListener('input', drawRounded);
+
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            downloadCanvas(canvas, originalFilename, 'rounded');
+        });
+    </script>
+</body>
+</html>
