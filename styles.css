@@ -91,7 +91,58 @@ input, select {
 canvas {
     max-width: 100%;
     max-height: 400px;
-    margin: 20px 0;
+    display: block;
+    margin: 20px auto;
+}
+
+/* Segmented control styling */
+.segmented {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px;
+    border-radius: 16px;
+    background: #202020;
+    box-shadow: inset 0 0 0 2px #2a2a2a;
+}
+
+.segmented .segmented-highlight {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    height: calc(100% - 12px);
+    width: 0;
+    background: #2f6bff;
+    border-radius: 12px;
+    box-shadow: 0 0 0 2px #1a1a1a, 0 6px 18px rgba(47,107,255,0.35);
+    transition: transform 180ms cubic-bezier(.2,.8,.2,1), width 180ms cubic-bezier(.2,.8,.2,1);
+}
+
+.segmented button {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    color: #e5e5e5;
+    border: none;
+    padding: 10px 18px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: color 150ms ease-in-out, background 150ms ease-in-out;
+    font-size: 15px;
+}
+
+.segmented button.active,
+.segmented button[aria-selected="true"] {
+    color: #ffffff;
+}
+
+.segmented:focus-within {
+    box-shadow: inset 0 0 0 2px #2a2a2a, 0 0 0 3px rgba(47,107,255,0.35);
+}
+
+.segmented button:focus-visible {
+    outline: none;
 }
 
 .back-btn {

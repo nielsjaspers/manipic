@@ -20,6 +20,7 @@
                 <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
             <p>Click to upload SVG or paste from clipboard</p>
+            <input id="fileInput" type="file" accept=".svg" style="display:none" />
         </div>
         <canvas id="canvas" style="display:none;"></canvas>
         <div class="customization" id="customization">
@@ -37,13 +38,11 @@
         let svgString = null;
         let originalFilename = 'image.svg';
 
-        document.getElementById('uploadArea').addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.svg';
-            input.onchange = (e) => loadSVG(e.target.files[0]);
-            input.click();
-        });
+        bindPersistentFileInput(
+            document.getElementById('uploadArea'),
+            document.getElementById('fileInput'),
+            (file) => loadSVG(file)
+        );
 
         handleClipboardPaste((pastedImg) => {
             // For SVG, clipboard might not work directly, but try

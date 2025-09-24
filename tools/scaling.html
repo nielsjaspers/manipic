@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Downscale - Manipic</title>
+    <title>Scaling - Manipic</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
@@ -20,6 +20,7 @@
                 <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
             <p>Click to upload or paste image from clipboard</p>
+            <input id="fileInput" type="file" accept="image/*" style="display:none" />
         </div>
         <canvas id="canvas" style="display:none;"></canvas>
         <div class="customization" id="customization">
@@ -38,13 +39,11 @@
         let img = null;
         let originalFilename = 'image.png';
 
-        document.getElementById('uploadArea').addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = (e) => loadImage(e.target.files[0]);
-            input.click();
-        });
+        bindPersistentFileInput(
+            document.getElementById('uploadArea'),
+            document.getElementById('fileInput'),
+            (file) => loadImage(file)
+        );
 
         handleClipboardPaste((pastedImg) => {
             img = pastedImg;

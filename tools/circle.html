@@ -20,15 +20,16 @@
                 <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
             <p>Click to upload or paste image from clipboard</p>
+            <input id="fileInput" type="file" accept="image/*" style="display:none" />
         </div>
         <canvas id="canvas" style="display:none;"></canvas>
         <div class="customization" id="customization">
             <label>Background:</label>
-            <div class="button-group" id="bgButtons">
-                <button data-value="white">White</button>
-                <button data-value="black">Black</button>
-                <button data-value="transparent">Transparent</button>
-                <button data-value="custom">Custom</button>
+            <div class="segmented" id="bgSegmented" role="tablist">
+                <button data-value="white" class="active" role="tab" aria-selected="true">White</button>
+                <button data-value="black" role="tab">Black</button>
+                <button data-value="transparent" role="tab">Transparent</button>
+                <button data-value="custom" role="tab">Custom</button>
             </div>
             <div class="custom-field" id="customField">
                 <input type="color" id="customBg">
@@ -44,13 +45,11 @@
         let originalFilename = 'image.png';
         let currentBg = 'white';
 
-        document.getElementById('uploadArea').addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = (e) => loadImage(e.target.files[0]);
-            input.click();
-        });
+        bindPersistentFileInput(
+            document.getElementById('uploadArea'),
+            document.getElementById('fileInput'),
+            (file) => loadImage(file)
+        );
 
         handleClipboardPaste((pastedImg) => {
             img = pastedImg;
@@ -97,10 +96,10 @@
             ctx.restore();
         }
 
-        document.getElementById('bgButtons').addEventListener('click', (e) => {
+        initSegmented(document.getElementById('bgSegmented'));
+        document.getElementById('bgSegmented').addEventListener('click', (e) => {
             if (e.target.tagName === 'BUTTON') {
-                document.querySelectorAll('#bgButtons button').forEach(btn => btn.classList.remove('active'));
-                e.target.classList.add('active');
+                document.querySelectorAll('#bgSegmented button').forEach(btn => btn.setAttribute('aria-selected', btn === e.target ? 'true' : 'false'));
                 currentBg = e.target.dataset.value;
                 if (img) drawCircle();
                 document.getElementById('customField').classList.toggle('show', currentBg === 'custom');
