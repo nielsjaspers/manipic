@@ -107,6 +107,10 @@
             }
         });
 
+        document.getElementById('customBg').addEventListener('input', () => {
+            if (img && currentBg === 'custom') drawCircle();
+        });
+
         document.getElementById('downloadBtn').addEventListener('click', () => {
             downloadCanvas(canvas, originalFilename, 'circle');
         });

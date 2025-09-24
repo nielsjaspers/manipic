@@ -131,6 +131,10 @@
 
         document.getElementById('customRadius').addEventListener('input', drawRounded);
 
+        document.getElementById('customBg').addEventListener('input', () => {
+            if (img && currentBg === 'custom') drawRounded();
+        });
+
         document.getElementById('downloadBtn').addEventListener('click', () => {
             downloadCanvas(canvas, originalFilename, 'rounded');
         });
